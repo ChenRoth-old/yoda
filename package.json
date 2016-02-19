@@ -1,0 +1,29 @@
+{
+  "name": "yoda",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "dependencies": {},
+  "devDependencies": {
+    "del": "^2.2.0",
+    "glob": "^7.0.0",
+    "gulp": "^3.9.1",
+    "gulp-git": "^1.7.0",
+    "gulp-livereload": "^3.8.1",
+    "gulp-marked-mustache": "^0.2.0",
+    "gulp-nunjucks": "^2.2.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChenRoth/yoda.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ChenRoth/yoda/issues"
+  },
+  "homepage": "https://github.com/ChenRoth/yoda#readme"
+}
