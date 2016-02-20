@@ -8,8 +8,11 @@
     "del": "^2.2.0",
     "glob": "^7.0.0",
     "gulp": "^3.9.1",
+    "gulp-front-matter": "^1.3.0",
+    "gulp-markdown": "^1.2.0",
     "gulp-marked-mustache": "^0.2.0",
     "gulp-nunjucks": "^2.2.0",
+    "marked": "^0.3.5",
     "prettyjson": "^1.1.3",
     "yargs": "^4.1.0"
   },
