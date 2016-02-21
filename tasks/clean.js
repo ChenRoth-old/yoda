@@ -2,8 +2,8 @@
 const del = require('del');
 const path = require('path');
 
-module.exports = (gulp, dest) => {
-  gulp.task('clean', () => {
-    del(path.join(dest, '**'));
+module.exports = (gulp, opts) => {
+  gulp.task('clean', (cb) => {
+    return del(path.join(opts.output, '/**/*.*'));
   });
 }

@@ -9,11 +9,11 @@ const pretty = (input) => {
 }
 
 let opts = {
-  verbose: argv.verbose
+  verbose: argv.verbose || false,
+  output: argv.output || 'build'
 };
 let metadata = new Metadata();
 
-let BUILD_DIR = '/home/chen/code/build';
 
 // try to load a predefined metadata
 try {
@@ -24,8 +24,8 @@ try {
 }
 
 require('./tasks/metadata')(gulp, metadata, opts);
-require('./tasks/clean')(gulp, BUILD_DIR);
-require('./tasks/build')(gulp, metadata, BUILD_DIR);
+require('./tasks/clean')(gulp, opts);
+require('./tasks/build')(gulp, metadata, opts);
 
 gulp.task('default', ['build']);
 
