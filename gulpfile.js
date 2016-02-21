@@ -13,6 +13,8 @@ let opts = {
 };
 let metadata = new Metadata();
 
+let BUILD_DIR = '/home/chen/code/build';
+
 // try to load a predefined metadata
 try {
   let initialMetadata = require('./content/metadata.json');
@@ -22,19 +24,11 @@ try {
 }
 
 require('./tasks/metadata')(gulp, metadata, opts);
-require('./tasks/clean')(gulp, opts);
-require('./tasks/build')(gulp, metadata, opts);
+require('./tasks/clean')(gulp, BUILD_DIR);
+require('./tasks/build')(gulp, metadata, BUILD_DIR);
 
 gulp.task('default', ['build']);
 
-gulp.task('rebuild', () => {
-  console.log(metadata);
-})
-
-gulp.task('watch', ['build'], () => {
-    gulp.watch(['content/**', 'templates/**'], ['rebuild']);
+gulp.task('watch', () => {
+  gulp.watch(['./content/**', './templates/**'], ['build']);
 });
-
-// gulp.task('watch', () => {
-//   gulp.watch(['content/**', 'templates/**'], ['build']);
-// });
