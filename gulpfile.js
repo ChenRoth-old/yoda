@@ -39,10 +39,11 @@ gulp.task('browser-sync', function() {
 require('./tasks/metadata')(gulp, metadata, opts);
 require('./tasks/clean')(gulp, opts);
 require('./tasks/build')(gulp, metadata, opts);
+require('./tasks/fetch')(gulp, '/home/chen/code/yoda/content', '../content/sources.json');
 
-gulp.task('default', ['watch', 'browser-sync', 'build']);
+gulp.task('default', ['watch', 'browser-sync']);
 
-gulp.task('watch', ['build'], function() {
-  gulp.watch(['content/**'], ['build']);
+gulp.task('watch', function() {
+  gulp.watch(['content/**/*.md'], ['build']);
   gulp.watch('build/**').on('changed', reload);
 });

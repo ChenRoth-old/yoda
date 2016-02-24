@@ -5,7 +5,7 @@ const interpolate = require('../gulp-plugins/interpolate');
 const md2html = require('../gulp-plugins/md2html');
 
 module.exports = (gulp, metadata, opts) => {
-  gulp.task('build', ['metadata'], () => {
+  gulp.task('build', ['metadata', 'fetch'], () => {
     gulp.src('content/**/*.md')
       .pipe(frontmatter())
       .pipe(injectMetadata(metadata))
