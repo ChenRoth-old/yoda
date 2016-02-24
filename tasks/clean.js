@@ -2,10 +2,8 @@
 const del = require('del');
 const path = require('path');
 
-let BUILD_PATH = './build/';
-
-module.exports = (gulp) => {
+module.exports = (gulp, opts) => {
   gulp.task('clean', () => {
-    del(path.join(BUILD_PATH, '**'));
+    return del(opts.output);
   });
 }

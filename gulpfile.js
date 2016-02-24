@@ -1,6 +1,8 @@
 'use strict';
 const gulp = require('gulp');
 const prettyjson = require('prettyjson');
+const browserSync = require('browser-sync');
+const reload = browserSync.reload;
 const argv = require('yargs').argv;
 
 const Metadata = require('./src/Metadata');
@@ -9,9 +11,11 @@ const pretty = (input) => {
 }
 
 let opts = {
-  verbose: argv.verbose
+  verbose: argv.verbose || false,
+  output: argv.output || 'build'
 };
 let metadata = new Metadata();
+
 
 // try to load a predefined metadata
 try {
@@ -21,20 +25,25 @@ try {
   pretty(`metadata file wasn't found`);
 }
 
+gulp.task('browser-sync', function() {
+  browserSync.init(
+    {
+      server: {
+        baseDir: 'build',
+        directory: true
+      }
+    }
+  );
+});
+
 require('./tasks/metadata')(gulp, metadata, opts);
 require('./tasks/clean')(gulp, opts);
 require('./tasks/build')(gulp, metadata, opts);
+require('./tasks/fetch')(gulp, '/home/chen/code/yoda/content', '../content/sources.json');
 
-gulp.task('default', ['build']);
+gulp.task('default', ['watch', 'browser-sync']);
 
-gulp.task('rebuild', () => {
-  console.log(metadata);
-})
-
-gulp.task('watch', ['build'], () => {
-    gulp.watch(['content/**', 'templates/**'], ['rebuild']);
+gulp.task('watch', function() {
+  gulp.watch(['content/**/*.md'], ['build']);
+  gulp.watch('build/**').on('changed', reload);
 });
-
-// gulp.task('watch', () => {
-//   gulp.watch(['content/**', 'templates/**'], ['build']);
-// });

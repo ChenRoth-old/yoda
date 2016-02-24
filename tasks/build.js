@@ -1,33 +1,16 @@
 'use strict';
-const nunjucks = require('gulp-nunjucks');
-const marked = require('gulp-marked-mustache');
+const frontmatter = require('gulp-front-matter');
+const injectMetadata = require('../gulp-plugins/inject-metadata');
+const interpolate = require('../gulp-plugins/interpolate');
+const md2html = require('../gulp-plugins/md2html');
 
-let BUILD_PATH = './build/';
-
-module.exports = (gulp, metadata) => {
-  gulp.task('build', ['metadata', 'clean'], () => {
+module.exports = (gulp, metadata, opts) => {
+  gulp.task('build', ['metadata', 'fetch'], () => {
     gulp.src('content/**/*.md')
-      .pipe(interpolate(metadata))
+      .pipe(frontmatter())
+      .pipe(injectMetadata(metadata))
+      .pipe(interpolate())
       .pipe(md2html())
-      .pipe(gulp.dest(BUILD_PATH));
-  });
-}
-
-function interpolate(metadata) {
-  /**
-   * template interpolation in md files
-   * @param  {object} metadata data to interpolate
-   * @return {Stream.Writable}          a writable stream to gulp.pipe to
-   */
-  return nunjucks.compile(metadata.fields);
-}
-
-function md2html() {
-  /**
-   * the implementation detail of converting md files to html
-   * @return {Stream.Writable}   a writable stream to gulp.pipe to
-   */
-  return marked({
-    templatePath: './templates/'
+      .pipe(gulp.dest(opts.output));
   });
 }
