@@ -1,6 +1,8 @@
 'use strict';
 const gulp = require('gulp');
 const prettyjson = require('prettyjson');
+const browserSync = require('browser-sync');
+const reload = browserSync.reload;
 const argv = require('yargs').argv;
 
 const Metadata = require('./src/Metadata');
@@ -23,12 +25,24 @@ try {
   pretty(`metadata file wasn't found`);
 }
 
+gulp.task('browser-sync', function() {
+  browserSync.init(
+    {
+      server: {
+        baseDir: 'build',
+        directory: true
+      }
+    }
+  );
+});
+
 require('./tasks/metadata')(gulp, metadata, opts);
 require('./tasks/clean')(gulp, opts);
 require('./tasks/build')(gulp, metadata, opts);
 
-gulp.task('default', ['build']);
+gulp.task('default', ['watch', 'browser-sync', 'build']);
 
-gulp.task('watch', () => {
-  gulp.watch(['./content/**', './templates/**'], ['build']);
+gulp.task('watch', ['build'], function() {
+  gulp.watch(['content/**'], ['build']);
+  gulp.watch('build/**').on('changed', reload);
 });
