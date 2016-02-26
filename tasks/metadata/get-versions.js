@@ -2,7 +2,7 @@
 const subprocess = require('child_process').exec;
 
 function getVersions(repoUrl, cb) {
-  repoUrl = repoUrl || 'https://github.com/cloudify-cosmo/docs.getcloudify.org.git';
+  repoUrl = repoUrl || 'https://github.com/cloudify-cosmo/cloudify-manager.git';
   subprocess(`git ls-remote ${repoUrl}`, (err, stdout, stderr) => {
 
     if (err) {
@@ -18,7 +18,7 @@ function getVersions(repoUrl, cb) {
     let versions = refs.map((ref) => {
       let match = ref.match(/(\d+\.\d+(\.\d+)?)-build/);
       return match && match[1];
-    });
+    }).filter((ref) => { return ref; });
     cb && cb(null, versions);
   });
 }
