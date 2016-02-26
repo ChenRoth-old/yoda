@@ -6,6 +6,7 @@
   "dependencies": {},
   "devDependencies": {
     "browser-sync": "^2.11.1",
+    "colors": "^1.1.2",
     "del": "^2.2.0",
     "download": "^4.4.3",
     "glob": "^7.0.0",
