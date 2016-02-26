@@ -1,9 +1,111 @@
 <head>
   <title>{{title}}</title>
   <meta name="keywords" content="{{keywords}}">
+  <link rel="stylesheet" href="http://docs.getcloudify.org/3.3.1/css/bootstrap.min.css" media="screen">
+  <link rel="stylesheet" href="http://docs.getcloudify.org/3.3.1/css/hugo-bootswatch.css">
+  <link rel="stylesheet" href="http://docs.getcloudify.org/3.3.1/css/general.css">
+  <link rel="stylesheet" href="http://docs.getcloudify.org/3.3.1/css/bootstrap-override.css">
+  <link rel="stylesheet" href="http://docs.getcloudify.org/3.3.1/css/bootstrap-callout.css">
+  <link rel="stylesheet" href="http://docs.getcloudify.org/3.3.1/css/navbar.css">
+  <link rel="stylesheet" href="http://docs.getcloudify.org/3.3.1/css/sidebar.css">
+  <link rel="stylesheet" href="http://docs.getcloudify.org/3.3.1/css/topbar.css">
+  <link rel="stylesheet" href="http://docs.getcloudify.org/3.3.1/css/magnific-popup.css">
+  <link rel="stylesheet" href="http://docs.getcloudify.org/3.3.1/css/toc.css">
+  <link rel="stylesheet" href="http://docs.getcloudify.org/3.3.1/css/main-layout.css">
+  <link rel="stylesheet" href="http://docs.getcloudify.org/3.3.1/css/searchbox.css">
+  <link rel="stylesheet" href="http://docs.getcloudify.org/3.3.1/css/sticky-footer.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.0.0/styles/xcode.min.css">
+  <link rel="stylesheet" href="http://docs.getcloudify.org/3.3.1/css/highlightjs-override.css">
 </head>
 <body>
-  <div style="background: red;">
-    {{body | safe}}
+  <div class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+          <i class="fa fa-ellipsis-v fa-fw"></i>
+        </button>
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".topbar">
+          <i class="fa fa-th-list fa-fw"></i>
+        </button>
+        <a href="//getcloudify.org" class="navbar-brand">
+          <img src="http://docs.getcloudify.org/3.3.1/images/logo.png">
+          <span class="gs-font">Cloudify</span>
+        </a>
+      </div>
+      <div class="collapse navbar-collapse" id="navbar-main">
+        <ul class="nav navbar-nav">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+              <span>docs</span>
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              {% for version in versions %}
+              <li>
+                <a href="http://docs.getcloudify.org/{{version}}">{{version}}</a>
+              </li>
+              {% endfor %}
+            </ul>
+          </li>
+          <li>
+            <a class="" href="http://getcloudify.org/cloudifysourcetv.html">
+              <span>tutorials</span>
+            </a>
+          </li>
+          <li>
+            <a class="" href="http://getcloudify.org/participate.htm">
+              <span>training</span>
+            </a>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
+              <span>resources</span>
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="https://groups.google.com/forum/#!forum/cloudify-users"> mailing list </a>
+              </li>
+              <li>
+                <a href="http://getcloudify.org/blog/"> blog </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <div class="navbar-right">
+          <a href="http://getcloudify.org/downloads/get_cloudify_3x.html" class="hidden-xs hidden-sm">
+            <button type="button" class="btn btn-primary navbar-btn" title="Get Cloudify">
+              <i class="fa fa-arrow-circle-o-down"></i> <span>download</span>
+            </button>
+          </a>
+          <a href="http://getcloudify.org/goPro.html">
+            <button type="button" class="btn btn-action navbar-btn" title="Cloudify Premium">
+              <span>premium</span>
+            </button>
+          </a>
+        </div>
+
+      </div>
+    </div>
   </div>
+  <div>
+  {{body | safe}}
+  </div>  
+  <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="http://docs.getcloudify.org/3.3.1/js/jquery.ba-hashchange.min.js"></script>
+  <script src="http://docs.getcloudify.org/3.3.1/js/jquery.swiftype.search.js"></script>
+  <script src="http://docs.getcloudify.org/3.3.1/js/jquery.swiftype.autocomplete.js"></script>
+  <script src="http://docs.getcloudify.org/3.3.1/js/bootstrap.min.js"></script>
+  <script src="http://docs.getcloudify.org/3.3.1/js/bootswatch.js"></script>
+  <script src="http://docs.getcloudify.org/3.3.1/js/tree.js"></script>
+  <script src="http://docs.getcloudify.org/3.3.1/js/sidebar.js"></script>
+  <script src="http://docs.getcloudify.org/3.3.1/js/topbar.js"></script>
+  <script src="http://docs.getcloudify.org/3.3.1/js/toc.js"></script>
+  <script src="http://docs.getcloudify.org/3.3.1/js/jquery.magnific-popup.min.js"></script>
+  <script src="http://docs.getcloudify.org/3.3.1/js/searchbox.js"></script>
+  <script src="http://docs.getcloudify.org/3.3.1/js/github-edit-button.js"></script>
+  <script src="http://docs.getcloudify.org/3.3.1/js/highlight.pack.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad();
+  </script>
 </body>
