@@ -1,4 +1,5 @@
 node_modules
-build
-content
 yodaconfig.json
+demo/build
+demo/content
+!demo/content/index.md

@@ -13,7 +13,7 @@ module.exports = (gulp, metadata, opts) => {
       .pipe(injectMetadata(metadata))
       .pipe(interpolate())
       .pipe(md2html())
-      .pipe(renderTemplate('/home/chen/code/yoda/templates'))
+      .pipe(renderTemplate(opts.paths.templates))
       .pipe(gulp.dest(opts.paths.build));
   });
 }

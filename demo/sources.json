@@ -1,0 +1,5 @@
+{
+  "plugins/script-plugin.md": "https://raw.githubusercontent.com/cloudify-cosmo/cloudify-script-plugin/master/README.md",
+  "plugins/archive": "https://github.com/cloudify-cosmo/cloudify-script-plugin/archive/master.zip",
+  "test": "https://raw.githubusercontent.com/ChenRoth/yoda/b42d4c81330a0dff3a92ba4938e88571ccd9914a/test.md"
+}

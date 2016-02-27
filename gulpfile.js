@@ -37,10 +37,12 @@ let opts = {
 let paths = {
   base: opts.base,
   content: path.join(opts.base, 'content'),
-  build: path.join(opts.base, 'build')
+  build: path.join(opts.base, 'build'),
+  templates: path.join(opts.base, 'templates')
 }
 opts.paths = paths;
 
+// check base dir exists before starting out
 validateDirectoryExists(opts.paths.base);
 
 // a pearl of wisdom for broadening your knowledge...

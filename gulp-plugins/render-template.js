@@ -6,8 +6,6 @@ const str2stream = require('string-to-stream')
 let env;
 
 module.exports = function insertTemplate(templatesPath) {
-
-  templatesPath = templatesPath || 'templates';
   return through.obj(function(file, encoding, cb) {
 
     let template = file.data.template || 'default';
