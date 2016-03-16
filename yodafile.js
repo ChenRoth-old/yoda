@@ -37,6 +37,7 @@ let opts = {
 let paths = {
   base: opts.base,
   content: path.join(opts.base, 'content'),
+  style: path.join(opts.base, 'style'),
   build: path.join(opts.base, 'build'),
   templates: path.join(opts.base, 'templates')
 }
@@ -71,13 +72,14 @@ gulp.task('browser-sync', () => {
   });
 });
 
+require('./tasks/style')(gulp, opts);
 require('./tasks/metadata')(gulp, metadata, opts);
 require('./tasks/clean')(gulp, opts);
 require('./tasks/fetch')(gulp, opts.paths.content, path.join(opts.paths.base, 'sources.json'));
 require('./tasks/compile')(gulp, metadata, opts);
 require('./tasks/watch')(gulp, opts);
 
-gulp.task('build', gulp.series('clean', gulp.parallel('metadata', 'fetch'), 'compile'));
+gulp.task('build', gulp.series('clean', gulp.parallel('metadata', 'fetch'), gulp.parallel('compile', 'style')));
 gulp.task('default', gulp.series('build', gulp.parallel('browser-sync', 'watch')));
 
 function validateDirectoryExists(dir) {

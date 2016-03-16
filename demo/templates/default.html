@@ -16,6 +16,9 @@
   <link rel="stylesheet" href="http://docs.getcloudify.org/3.3.1/css/sticky-footer.css">
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.0.0/styles/xcode.min.css">
   <link rel="stylesheet" href="http://docs.getcloudify.org/3.3.1/css/highlightjs-override.css">
+  {% for stylesheet in stylesheets %}
+  <link rel="stylesheet" href="{{stylesheet}}">
+  {% endfor %}
 </head>
 <body>
   <div class="navbar navbar-default navbar-fixed-top">
@@ -90,7 +93,7 @@
   </div>
   <div>
   {{body | safe}}
-  </div>  
+  </div>
   <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
   <script src="http://docs.getcloudify.org/3.3.1/js/jquery.ba-hashchange.min.js"></script>
   <script src="http://docs.getcloudify.org/3.3.1/js/jquery.swiftype.search.js"></script>
