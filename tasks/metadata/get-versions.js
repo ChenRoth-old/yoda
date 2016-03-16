@@ -1,5 +1,6 @@
 'use strict';
 const subprocess = require('child_process').exec;
+const verbose = require('../verbose');
 
 function getVersions(repoUrl, cb) {
   repoUrl = repoUrl || 'https://github.com/cloudify-cosmo/cloudify-manager.git';
@@ -30,6 +31,6 @@ module.exports = getVersions;
 if (require.main === module) {
   getVersions(null, (err, versions) => {
     if (err) throw err;
-    console && console.log(versions);
+    verbose(versions);
   });
 }

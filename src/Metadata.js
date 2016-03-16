@@ -19,7 +19,7 @@ module.exports = class Metadata {
     let promise = null;
     if (solution instanceof Function) {
       // if the solution is a function, it must be a node callback style
-      promise = promisify(solution);
+      let promise = promisify(solution);
       this.fields[field] = promise.apply(this, args);
     } else {
       // if the solution is not a function, simply use it as is
