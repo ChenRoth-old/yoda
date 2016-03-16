@@ -9,7 +9,9 @@ const renderTemplate = require('../gulp-plugins/render-template');
 const path = require('path');
 
 module.exports = (gulp, metadata, opts) => {
-  gulp.task('compile', function compile() {
+  gulp.task(compile);
+
+  function compile() {
     return gulp.src(path.join(opts.paths.content, '**/*.md'), {
         since: gulp.lastRun('compile')
       })
@@ -21,5 +23,6 @@ module.exports = (gulp, metadata, opts) => {
       .pipe(renderTemplate(opts.paths.templates))
       .pipe(gulp.dest(opts.paths.build));
 
-  });
+  }
+  compile.description = 'process content files by interpolating placeholders with metadata and converting to html'
 }

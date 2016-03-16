@@ -7,7 +7,9 @@ const verbose = require('./verbose');
 
 module.exports = (gulp, opts) => {
 
-  gulp.task('watch', () => {
+  gulp.task(watch);
+
+  function watch() {
 
     // watch for content changes
     let contentWatcher = gulp.watch('**/*.md', {
@@ -25,7 +27,10 @@ module.exports = (gulp, opts) => {
 
     // reload browser on changes in build
     gulp.watch([path.join(opts.paths.build, '**')]).on('change', browserSync.get('browser').reload);
-  });
+  }
+
+  watch.description = 'watch changes in content and style files and process them again'
+
 
   function delBuildFile(srcPath) {
     /**

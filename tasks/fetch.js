@@ -6,7 +6,9 @@ const promisify = require("promisify-node");
 const verbose = require('./verbose');
 
 module.exports = (gulp, basePath, sourcesPath) => {
-  gulp.task('fetch', (done) => {
+  gulp.task(fetch);
+
+  function fetch(done) {
     let sources = require(sourcesPath);
     let downloadClient = null
 
@@ -59,5 +61,7 @@ module.exports = (gulp, basePath, sourcesPath) => {
       done();
     });
 
-  });
+  }
+
+  fetch.description = 'fetch remote content referenced in sources.json'
 }

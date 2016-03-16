@@ -59,7 +59,9 @@ try {
   pretty(`metadata file wasn't found`);
 }
 
-gulp.task('browser-sync', () => {
+gulp.task('browser-sync', browserSyncTask);
+
+function browserSyncTask() {
   browserSync.init({
     server: {
       baseDir: opts.paths.build,
@@ -70,7 +72,8 @@ gulp.task('browser-sync', () => {
     notify: false
 
   });
-});
+}
+browserSyncTask.description = 'live preview of your website in the browser!'
 
 require('./tasks/style')(gulp, opts);
 require('./tasks/metadata')(gulp, metadata, opts);
@@ -79,8 +82,16 @@ require('./tasks/fetch')(gulp, opts.paths.content, path.join(opts.paths.base, 's
 require('./tasks/compile')(gulp, metadata, opts);
 require('./tasks/watch')(gulp, opts);
 
-gulp.task('build', gulp.series('clean', gulp.parallel('metadata', 'fetch'), gulp.parallel('compile', 'style')));
-gulp.task('default', gulp.series('build', gulp.parallel('browser-sync', 'watch')));
+// register 'build' task
+let build = gulp.series('clean', gulp.parallel('metadata', 'fetch'), gulp.parallel('compile', 'style'));
+build.displayName = 'build';
+build.description = 'clean, fetch remote metadata and content, compile content and process style';
+gulp.task(build);
+
+// register 'default' task
+let defaultTask = gulp.series('build', gulp.parallel('browser-sync', 'watch'));
+defaultTask.description = 'build and watch';
+gulp.task('default', defaultTask);
 
 function validateDirectoryExists(dir) {
   try {
