@@ -8,12 +8,22 @@ const verbose = require('./verbose');
 module.exports = (gulp, opts) => {
 
   gulp.task('watch', () => {
-    let sourceWatcher = gulp.watch('**/*.md', {
+
+    // watch for content changes
+    let contentWatcher = gulp.watch('**/*.md', {
         cwd: opts.paths.content
       },
       gulp.task('compile'));
-    sourceWatcher.on('unlink', delBuildFile);
 
+    contentWatcher.on('unlink', delBuildFile);
+
+    // watch for style changes
+    let styleWatcher = gulp.watch('**/*.scss', {
+        cwd: opts.paths.style
+      },
+      gulp.task('style'));
+
+    // reload browser on changes in build
     gulp.watch([path.join(opts.paths.build, '**')]).on('change', browserSync.get('browser').reload);
   });
 

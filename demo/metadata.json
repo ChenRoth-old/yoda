@@ -1,3 +1,4 @@
 {
-  "name": "chen"
+  "name": "chen",
+  "stylesheets": ["_css/main.css"]
 }
