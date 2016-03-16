@@ -9,8 +9,10 @@ const renderTemplate = require('../gulp-plugins/render-template');
 const path = require('path');
 
 module.exports = (gulp, metadata, opts) => {
-  gulp.task('build', ['metadata', 'fetch'], () => {
-    gulp.src(path.join(opts.paths.content, '**/*.md'))
+  gulp.task('compile', function compile() {
+    return gulp.src(path.join(opts.paths.content, '**/*.md'), {
+        since: gulp.lastRun('compile')
+      })
       .pipe(frontmatter())
       .pipe(injectMetadata(metadata))
       .pipe(skipDraft())
@@ -18,5 +20,6 @@ module.exports = (gulp, metadata, opts) => {
       .pipe(md2html())
       .pipe(renderTemplate(opts.paths.templates))
       .pipe(gulp.dest(opts.paths.build));
+
   });
 }

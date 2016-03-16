@@ -3,8 +3,7 @@
 'use strict';
 const gulp = require('gulp');
 const prettyjson = require('prettyjson');
-const browserSync = require('browser-sync');
-const reload = browserSync.reload;
+const browserSync = require('browser-sync').create('browser');
 const path = require('path');
 const fs = require('fs');
 let quotes = [];
@@ -15,7 +14,8 @@ try {
 const argv = require('yargs')
   .alias('v', 'verbose')
   .default({
-    verbose: false
+    verbose: false,
+    silent: true
   })
   .demand('d')
   .alias('d', 'dir')
@@ -58,26 +58,27 @@ try {
   pretty(`metadata file wasn't found`);
 }
 
-gulp.task('browser-sync', function() {
+gulp.task('browser-sync', () => {
   browserSync.init({
     server: {
       baseDir: opts.paths.build,
-      directory: true
-    }
+      //directory: true
+    },
+    ui: false,
+    logLevel: opts.verbose ? 'info' : 'silent',
+    notify: false
+
   });
 });
 
 require('./tasks/metadata')(gulp, metadata, opts);
 require('./tasks/clean')(gulp, opts);
-require('./tasks/build')(gulp, metadata, opts);
 require('./tasks/fetch')(gulp, opts.paths.content, path.join(opts.paths.base, 'sources.json'));
+require('./tasks/compile')(gulp, metadata, opts);
+require('./tasks/watch')(gulp, opts);
 
-gulp.task('default', ['watch', 'browser-sync']);
-
-gulp.task('watch', function() {
-  gulp.watch([path.join(opts.paths.content, '**/*.md')], ['build']);
-  gulp.watch([path.join(opts.paths.build, '**')]).on('changed', reload);
-});
+gulp.task('build', gulp.series('clean', gulp.parallel('metadata', 'fetch'), 'compile'));
+gulp.task('default', gulp.series('build', gulp.parallel('browser-sync', 'watch')));
 
 function validateDirectoryExists(dir) {
   try {
