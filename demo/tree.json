@@ -1,0 +1,40 @@
+{
+	"url": "",
+	"children": [
+		{
+			"url": "index.html",
+			"title": "Titu Lars",
+			"children": []
+		},
+		{
+			"url": "plugins",
+			"children": [
+				{
+					"url": "plugins/script-plugin.html",
+					"title": "script-plugin",
+					"children": []
+				},
+				{
+					"url": "plugins/archive",
+					"children": [
+						{
+							"url": "plugins/archive/README.html",
+							"title": "README",
+							"children": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"url": "test",
+			"children": [
+				{
+					"url": "test/test.html",
+					"title": "test",
+					"children": []
+				}
+			]
+		}
+	]
+}
