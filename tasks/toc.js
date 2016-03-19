@@ -6,22 +6,32 @@ const path = require('path');
 module.exports = (gulp, opts) => {
   gulp.task(toc);
 
+  function transform(tree) {
+
+    const path = require('path');
+
+    return tree.traverse(function(node) {
+      let file = node.data;
+      let isFile = !!file.stem;
+      let url = '/' + file.relative.replace(/\.md$/, '.html');
+      let title = isFile ? (file.frontMatter.title || file.stem) : path.basename(url);
+      node.data = {
+        url,
+        title
+      }
+      return node.data;
+    });
+  };
+
+
   function toc() {
 
     let gft = gulpFileTree({
-      transform: function(tree) {
-        return tree.traverse(function(node) {
-          let file = node.data;
-          node.data = {
-            url: file.relative.replace(/\.md$/, '.html'),
-            title: (file.frontMatter && file.frontMatter.title) || file.stem
-          }
-          return node.data;
-        });
-      },
+      transform: transform,
       emitFiles: true,
       emitTree: 'toc'
     });
+
 
     return gulp.src('**/*.md', {
         cwd: opts.paths.content,
@@ -29,7 +39,7 @@ module.exports = (gulp, opts) => {
       })
       .pipe(frontmatter())
       .pipe(gft)
-      .pipe(gulp.dest(opts.paths.base));
+      .pipe(gulp.dest(path.join(opts.paths.base, '.toc')));
   };
 
   toc.description = 'build table of contents';
