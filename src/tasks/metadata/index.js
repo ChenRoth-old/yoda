@@ -11,7 +11,7 @@ module.exports = (gulp, metadata, opts) => {
     verbose('preparing metadata...');
     metadata.prepare('versions', getVersions, 'https://github.com/cloudify-cosmo/cloudify-manager.git');
     metadata.prepare('env', process.env['NODE_ENV'] || 'development');
-    metadata.prepare('toc', require(path.join(opts.paths.base, '.toc', 'toc.json')));
+    metadata.prepare('toc', require(path.join(opts.paths.base, 'tree.json')));
     return metadata.ready((fields) => {
       verbose('\n' + prettyjson.render(fields), 'Metadata');
     });
