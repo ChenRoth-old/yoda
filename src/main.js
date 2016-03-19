@@ -24,7 +24,7 @@ const argv = require('yargs')
   .help('h')
   .argv;
 
-const Metadata = require('./src/Metadata');
+const Metadata = require('./Metadata');
 const pretty = (input) => {
   console && console.log(prettyjson.render(input));
 }
@@ -76,6 +76,7 @@ function browserSyncTask() {
 browserSyncTask.description = 'live preview of your website in the browser!'
 
 require('./tasks/style')(gulp, opts);
+require('./tasks/toc')(gulp, opts);
 require('./tasks/metadata')(gulp, metadata, opts);
 require('./tasks/clean')(gulp, opts);
 require('./tasks/fetch')(gulp, opts.paths.content, path.join(opts.paths.base, 'sources.json'));

@@ -29,13 +29,17 @@ module.exports = class Metadata {
 
   ready(cb) {
 
+    if (this._ready) {
+      return _ready;
+    }
+
     let fieldNames = Object.keys(this.fields);
     let fieldsList = [];
     for (let fieldName of fieldNames) {
       fieldsList.push(this.fields[fieldName]);
     }
     let self = this;
-    return Promise.all(fieldsList).then(function(values) {
+    this._ready = Promise.all(fieldsList).then(function(values) {
       for (let i = 0; i < values.length; i++) {
         let fieldName = fieldNames[i];
         let value = values[i];
@@ -43,5 +47,6 @@ module.exports = class Metadata {
       }
       cb && cb(self.fields);
     });
+    return this._ready;
   }
 }

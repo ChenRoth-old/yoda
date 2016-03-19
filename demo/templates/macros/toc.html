@@ -1,0 +1,12 @@
+{% macro renderTree(tree) %}
+<ul>
+  {%- recursivefor tree %}
+  <li>
+    {% set isParent = node.children.length > 0 %}
+    <a href="{{ " # " if isParent else node.url }}">{{ node.title }} {% if isParent %}&gt;{% endif %}</a> {% recursiveif %}
+    <ul class="submenu">{% recursive %}</ul>
+    {% endrecursiveif %}
+  </li>
+  {%- endrecursivefor %}
+</ul>
+{% endmacro %}

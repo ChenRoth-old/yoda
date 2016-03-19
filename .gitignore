@@ -1,5 +1,5 @@
 node_modules
 yodaconfig.json
-demo/build
-demo/content
-!demo/content/index.md
+demo/*
+!demo/templates
+

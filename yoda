@@ -17,7 +17,7 @@ then
   npm install
 fi
 
-gulp "$@" --gulpfile yodafile.js
+gulp "$@" --gulpfile src/main.js --cwd $PWD
 
 
 cd $CURRENT_PATH
