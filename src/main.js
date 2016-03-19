@@ -6,6 +6,9 @@ const prettyjson = require('prettyjson');
 const browserSync = require('browser-sync').create('browser');
 const path = require('path');
 const fs = require('fs');
+
+const verbose = require('./tasks/verbose');
+
 let quotes = [];
 try {
   quotes = require('./yoda-quotes');
@@ -56,7 +59,7 @@ try {
   let initialMetadata = require(path.join(opts.base, 'metadata.json'));
   metadata = new Metadata(initialMetadata);
 } catch (e) {
-  pretty(`metadata file wasn't found`);
+  verbose(`metadata file wasn't found`, 'Metadata');
 }
 
 gulp.task('browser-sync', browserSyncTask);

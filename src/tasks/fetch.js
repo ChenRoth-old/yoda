@@ -9,7 +9,15 @@ module.exports = (gulp, basePath, sourcesPath) => {
   gulp.task(fetch);
 
   function fetch(done) {
-    let sources = require(sourcesPath);
+    let sources = null;
+    try {
+      sources = require(sourcesPath);
+    }
+    catch (e) {
+      verbose('no sources to fetch', 'Fetch');
+      done();
+      return;
+    }
     let downloadClient = null
 
     let downloadOpts = {
