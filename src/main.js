@@ -24,7 +24,7 @@ const argv = require('yargs')
   .help('h')
   .argv;
 
-const Metadata = require('./src/Metadata');
+const Metadata = require('./Metadata');
 const pretty = (input) => {
   console && console.log(prettyjson.render(input));
 }

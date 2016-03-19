@@ -1,8 +1,8 @@
 {
   "name": "yoda",
   "version": "1.0.0",
-  "description": "",
-  "main": "gulpfile.js",
+  "description": "Yoda - he knows his shit",
+  "main": "yoda",
   "dependencies": {},
   "devDependencies": {
     "browser-sync": "^2.11.1",
