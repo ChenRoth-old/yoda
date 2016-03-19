@@ -13,11 +13,13 @@ module.exports = (gulp, opts) => {
     return tree.traverse(function(node) {
       let file = node.data;
       let isFile = !!file.stem;
+      let draft = isFile && file.frontMatter.draft;
       let url = '/' + file.relative.replace(/\.md$/, '.html');
       let title = isFile ? (file.frontMatter.title || file.stem) : path.basename(url);
       node.data = {
         url,
-        title
+        title,
+        draft
       }
       return node.data;
     });
