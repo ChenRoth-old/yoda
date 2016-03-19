@@ -10,14 +10,14 @@ if [ -z "$SCRIPT_PATH" ] ; then
   exit 1  # fail
 fi
 
-cd $SCRIPT_PATH
+pushd $SCRIPT_PATH
 
-if ! [ -d "node_modules" ];
+if ! [ -d "../node_modules" ];
 then
   npm install
 fi
 
-gulp "$@" --gulpfile src/main.js --cwd $PWD
+gulp "$@" --gulpfile ../src/main.js --cwd $CURRENT_PATH
 
 
-cd $CURRENT_PATH
+popd

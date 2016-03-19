@@ -6,7 +6,7 @@ module.exports = (gulp, opts) => {
   gulp.task(clean);
 
   function clean() {
-    return del(opts.paths.build);
+    return del(opts.paths.build, { force: true });
   };
   clean.description = 'clean your build'
 }

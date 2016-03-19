@@ -38,6 +38,6 @@ module.exports = (gulp, opts) => {
     */
     let buildPath = path.join(opts.paths.build, srcPath).replace(/\.\w+$/, '.html');
     verbose(`File ${buildPath} was removed`);
-    del(buildPath);
+    del(buildPath, { force: true });
   }
 };

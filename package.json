@@ -23,6 +23,7 @@
     "moment": "^2.12.0",
     "nunjucks": "^2.3.0",
     "prettyjson": "^1.1.3",
+    "promisify-node": "^0.4.0",
     "string-to-stream": "^1.0.1",
     "through2": "^2.0.1",
     "yargs": "^4.1.0"
