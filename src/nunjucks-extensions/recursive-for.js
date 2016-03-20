@@ -50,9 +50,9 @@ module.exports = function RecursiveForExtension() {
         node.children.forEach(function(child) {
           ret.push(body_recursive());
           recursionHandler(child);
-          ret.push(body_endrecursiveif());
         })
       }
+      ret.push(body_endrecursiveif());
       ret.push(endBodyProcess)
     }
 

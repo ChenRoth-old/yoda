@@ -1,9 +1,10 @@
 'use strict';
 const through = require('through2');
 const nunjucks = require('nunjucks');
-const str2stream = require('string-to-stream')
+const str2stream = require('string-to-stream');
 // TODO: make this more generic by requiring the nunjucks-extensions dir and consuming all extensions within
 const nunjucksRecursiveForExtension = require('../nunjucks-extensions/recursive-for');
+const nunjucksRenderTreeFilter = require('../nunjucks-extensions/render-tree-filter');
 
 let env;
 
@@ -21,6 +22,7 @@ module.exports = function insertTemplate(templatesPath) {
     if (!env) {
       env = new nunjucks.Environment(new nunjucks.FileSystemLoader(templatesPath));
       env.addExtension('RecursiveForExtension', new nunjucksRecursiveForExtension());
+      env.addFilter('tree', nunjucksRenderTreeFilter);
     }
 
     // render file contents within template

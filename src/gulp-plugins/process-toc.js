@@ -16,6 +16,11 @@ module.exports = function processToc() {
         verbose(`excluded draft: ${file.relative}`, 'TOC');
         return cb();
       }
+      let excludeFromToc = !!file.frontMatter.hidetoc;
+      if (excludeFromToc) {
+        verbose(`excluded from TOC: ${file.relative}`, 'TOC');
+        return cb();
+      }
       let url = '/' + file.relative.replace(/\.md$/, '.html');;
       let hierarchy = file.relative.split(path.sep).slice(0, -1);
       let title = file.frontMatter.title || file.stem;
@@ -36,23 +41,27 @@ module.exports = function processToc() {
 
 function appendToTree(root, hierarchy, attributes) {
   let tree = Object.assign({
-    'name': 'root',
+    'title': 'root',
     'children': [],
   }, root);
   let pointer = tree;
+  let depth = 0;
   for (let level of hierarchy) {
     let next = _(pointer.children).find(function(dir) {
-      return dir.title == level
+      return dir.name == level
     });
     if (next) {
       pointer = next;
     } else {
       pointer.children.push({
-        'title': level,
-        'children': [],
+        title: level.replace('_', ' '),
+        name: level,
+        children: [],
+        depth: depth
       });
       pointer = pointer.children[pointer.children.length - 1];
     }
+    depth++;
   }
   pointer.children.push(attributes);
   return tree;
