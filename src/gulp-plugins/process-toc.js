@@ -34,15 +34,15 @@ module.exports = function processToc() {
     });
 }
 
-function appendToTree(ref, hierarchy, attributes) {
+function appendToTree(root, hierarchy, attributes) {
   let tree = Object.assign({
     'name': 'root',
     'children': [],
-  }, ref);
+  }, root);
   let pointer = tree;
   for (let level of hierarchy) {
     let next = _(pointer.children).find(function(dir) {
-      return dir.name == level
+      return dir.title == level
     });
     if (next) {
       pointer = next;
