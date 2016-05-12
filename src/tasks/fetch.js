@@ -12,8 +12,7 @@ module.exports = (gulp, basePath, sourcesPath) => {
     let sources = null;
     try {
       sources = require(sourcesPath);
-    }
-    catch (e) {
+    } catch (e) {
       verbose('no sources to fetch', 'Fetch');
       done();
       return;
@@ -34,7 +33,8 @@ module.exports = (gulp, basePath, sourcesPath) => {
       let destPath = path.join(basePath, targetPath);
 
       let pathIncludesFilenameMatch = destPath.match(/[^/]+\.\w+$/);
-      if (pathIncludesFilenameMatch) {
+      let isSourceArchive = remotePath.match(/\.(zip|tar.gz|tar)$/)
+      if (pathIncludesFilenameMatch && !isSourceArchive) {
         let fileName = pathIncludesFilenameMatch[0];
         destPath = path.dirname(destPath);
         downloadClient.get(remotePath, destPath).rename(fileName);
@@ -45,8 +45,11 @@ module.exports = (gulp, basePath, sourcesPath) => {
       let promisedDownload = new Promise(function(resolve, reject) {
         downloadClient.run((err, files) => {
           if (err) {
+            err = new Error(`couldn't fetch source ${remotePath}\n${err}`)
             reject(err);
+            return;
           }
+
           if (files.length == 1) {
             verbose(`downloaded ${remotePath} => ${files[0].path}`, 'Fetch');
           } else {
@@ -66,8 +69,8 @@ module.exports = (gulp, basePath, sourcesPath) => {
     });
 
     Promise.all(promisedDownloads).then(function() {
-      done();
-    });
+      done()
+    }, done);
 
   }
 
