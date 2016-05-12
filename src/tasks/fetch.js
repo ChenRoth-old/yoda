@@ -1,6 +1,7 @@
 'use strict';
 const Download = require('download');
 const path = require('path');
+const fs = require('fs');
 const promisify = require("promisify-node");
 
 const verbose = require('./verbose');
@@ -31,6 +32,10 @@ module.exports = (gulp, basePath, sourcesPath) => {
       downloadClient = new Download(downloadOpts);
       let remotePath = sources[targetPath];
       let destPath = path.join(basePath, targetPath);
+      if (fs.existsSync(destPath)) {
+        verbose(`${destPath} already exists, skipping`, 'Fetch');
+        return;
+      }
 
       let pathIncludesFilenameMatch = destPath.match(/[^/]+\.\w+$/);
       let isSourceArchive = remotePath.match(/\.(zip|tar.gz|tar)$/)
