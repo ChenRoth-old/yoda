@@ -2,6 +2,7 @@
 const through = require('through2');
 const nunjucks = require('nunjucks');
 const str2stream = require('string-to-stream');
+const path = require('path');
 
 let env;
 
@@ -12,6 +13,8 @@ module.exports = function insertTemplate(templatesPath) {
 
     // template data would be the file's metadata, with the file contents appended to it as 'body'
     let templateData = Object.assign({}, file.data, {
+      url: '/' + file.relative.replace(/\.md$/, '.html'),
+      hierarchy: file.relative.split(path.sep).slice(0, -1),
       body: file.contents.toString().trim()
     });
 
