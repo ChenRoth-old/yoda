@@ -25,6 +25,12 @@ module.exports = (gulp, opts) => {
       },
       gulp.task('style'));
 
+    // watch for style changes
+    let scriptsWatcher = gulp.watch('**/*.js', {
+        cwd: opts.paths.scripts
+      },
+      gulp.task('scripts'));
+
     // reload browser on changes in build
     gulp.watch([path.join(opts.paths.build, '**')]).on('change', browserSync.get('browser').reload);
   }
@@ -38,6 +44,8 @@ module.exports = (gulp, opts) => {
     */
     let buildPath = path.join(opts.paths.build, srcPath).replace(/\.\w+$/, '.html');
     verbose(`File ${buildPath} was removed`);
-    del(buildPath, { force: true });
+    del(buildPath, {
+      force: true
+    });
   }
 };

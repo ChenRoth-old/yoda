@@ -40,6 +40,7 @@ let opts = {
 let paths = {
   base: opts.base,
   content: path.join(opts.base, 'content'),
+  scripts: path.join(opts.base, 'scripts'),
   style: path.join(opts.base, 'style'),
   build: path.join(opts.base, 'build'),
   templates: path.join(opts.base, 'templates')
@@ -79,6 +80,7 @@ function browserSyncTask() {
 browserSyncTask.description = 'live preview of your website in the browser!'
 
 require('./tasks/style')(gulp, opts);
+require('./tasks/scripts')(gulp, opts);
 require('./tasks/toc')(gulp, opts);
 require('./tasks/metadata')(gulp, metadata, opts);
 require('./tasks/clean')(gulp, opts);
@@ -87,7 +89,7 @@ require('./tasks/compile')(gulp, metadata, opts);
 require('./tasks/watch')(gulp, opts);
 
 // register 'build' task
-let build = gulp.series('clean', gulp.parallel('metadata', 'fetch'), gulp.parallel('compile', 'style'));
+let build = gulp.series('clean', gulp.parallel('metadata', 'fetch'), gulp.parallel('compile', 'style', 'scripts'));
 build.displayName = 'build';
 build.description = 'clean, fetch remote metadata and content, compile content and process style';
 gulp.task(build);
