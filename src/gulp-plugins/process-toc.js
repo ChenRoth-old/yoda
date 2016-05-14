@@ -12,6 +12,7 @@ module.exports = function processToc() {
   return through.obj(
     function transform(file, encoding, cb) {
       let isDraft = !!file.frontMatter.draft;
+      let isFolderMetadata = (file.stem == '_folder');
       if (isDraft) {
         verbose(`excluded draft: ${file.relative}`, 'TOC');
         return cb();
@@ -21,18 +22,21 @@ module.exports = function processToc() {
         verbose(`excluded from TOC: ${file.relative}`, 'TOC');
         return cb();
       }
+
       let url = '/' + file.relative.replace(/\.md$/, '.html');;
       let hierarchy = file.relative.split(path.sep).slice(0, -1);
+      let name = file.stem;
       let title = file.frontMatter.title || file.stem;
       let keywords = file.frontMatter.keywords || [];
       let weight = file.frontMatter.weight || 0;
       let attributes = {
         title,
+        name,
         url,
         keywords,
         weight
       }
-      tree = appendToTree(tree, hierarchy, attributes);
+      tree = appendToTree(tree, hierarchy, attributes, isFolderMetadata);
       return cb();
     },
     function flush(cb) {
@@ -49,13 +53,11 @@ function sortTreeRecursive(node) {
     return;
   }
 
-  node.children.forEach(function(child) {
-    sortTreeRecursive(child);
-  })
+  node.children.forEach(sortTreeRecursive);
   node.children.sort(sortBranch);
 }
 
-function appendToTree(root, hierarchy, attributes) {
+function appendToTree(root, hierarchy, attributes, isFolderMetadata) {
   let tree = Object.assign({
     'title': 'root',
     'children': [],
@@ -80,7 +82,15 @@ function appendToTree(root, hierarchy, attributes) {
     }
     depth++;
   }
-  pointer.children.push(attributes);
+  if (isFolderMetadata) {
+    // use folder metadata file to override folder metadata
+    Object.assign(pointer, {
+      title: attributes.title,
+      weight: attributes.weight
+    });
+  } else {
+    pointer.children.push(attributes);
+  }
   return tree;
 }
 
@@ -89,9 +99,9 @@ function sortBranch(node1, node2) {
     return -1;
   } else if (node1.weight > node2.weight) {
     return 1;
-  } else if (node1.url < node2.url) {
+  } else if (node1.title < node2.title) {
     return -1;
-  } else if (node1.url > node2.url) {
+  } else if (node1.title > node2.title) {
     return 1;
   }
   return 0;
