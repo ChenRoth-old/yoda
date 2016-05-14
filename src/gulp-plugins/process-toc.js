@@ -25,18 +25,34 @@ module.exports = function processToc() {
       let hierarchy = file.relative.split(path.sep).slice(0, -1);
       let title = file.frontMatter.title || file.stem;
       let keywords = file.frontMatter.keywords || [];
+      let weight = file.frontMatter.weight || 0;
       let attributes = {
         title,
         url,
-        keywords
+        keywords,
+        weight
       }
       tree = appendToTree(tree, hierarchy, attributes);
       return cb();
     },
     function flush(cb) {
+      // sort tree by weight and name
+      sortTreeRecursive(tree);
+
       this.push(JSON.stringify(tree));
       cb();
     });
+}
+
+function sortTreeRecursive(node) {
+  if (!node.children) {
+    return;
+  }
+
+  node.children.forEach(function(child) {
+    sortTreeRecursive(child);
+  })
+  node.children.sort(sortBranch);
 }
 
 function appendToTree(root, hierarchy, attributes) {
@@ -57,6 +73,7 @@ function appendToTree(root, hierarchy, attributes) {
         title: level.replace('_', ' '),
         name: level,
         children: [],
+        weight: 0,
         depth: depth
       });
       pointer = pointer.children[pointer.children.length - 1];
@@ -65,4 +82,17 @@ function appendToTree(root, hierarchy, attributes) {
   }
   pointer.children.push(attributes);
   return tree;
+}
+
+function sortBranch(node1, node2) {
+  if (node1.weight < node2.weight) {
+    return -1;
+  } else if (node1.weight > node2.weight) {
+    return 1;
+  } else if (node1.url < node2.url) {
+    return -1;
+  } else if (node1.url > node2.url) {
+    return 1;
+  }
+  return 0;
 }

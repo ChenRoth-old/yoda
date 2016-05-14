@@ -11,7 +11,7 @@ module.exports = (gulp, opts) => {
         since: gulp.lastRun('scripts')
       })
       .pipe(jslint())
-      .pipe(jslint.reporter('default'))
+      // .pipe(jslint.reporter('default'))
       .pipe(gulp.dest(path.join(opts.paths.build, '_scripts')));
   };
 
