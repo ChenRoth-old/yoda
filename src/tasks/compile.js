@@ -10,10 +10,14 @@ const path = require('path');
 
 module.exports = (gulp, metadata, opts) => {
   gulp.task(compile);
+  gulp.task('compile:all', compileAll);
 
-  function compile() {
+  function compile(compileAll) {
+    // compile only added/changed files by default
+    var compileAll = compileAll || false;
+
     return gulp.src(path.join(opts.paths.content, '**/*.md'), {
-        since: gulp.lastRun('compile')
+        since: compileAll ? null : gulp.lastRun('compile')
       })
       .pipe(frontmatter())
       .pipe(injectMetadata(metadata))
@@ -24,5 +28,10 @@ module.exports = (gulp, metadata, opts) => {
       .pipe(gulp.dest(opts.paths.build));
 
   }
-  compile.description = 'process content files by interpolating placeholders with metadata and converting to html'
+
+  function compileAll() {
+    return compile.call(this, true);
+  }
+  compileAll.description = 'process all content files by interpolating placeholders with metadata and converting to html'
+  compile.description = 'process added/changed content files by interpolating placeholders with metadata and converting to html'
 }

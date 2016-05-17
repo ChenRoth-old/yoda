@@ -25,7 +25,12 @@ module.exports = (gulp, opts) => {
       },
       gulp.task('style'));
 
-    // watch for style changes
+    let templatesWatcher = gulp.watch('**/*.html', {
+        cwd: opts.paths.templates
+      },
+      gulp.task('compile:all'));
+
+    // watch for script changes
     let scriptsWatcher = gulp.watch('**/*.js', {
         cwd: opts.paths.scripts
       },

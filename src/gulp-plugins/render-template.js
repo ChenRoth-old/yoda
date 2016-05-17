@@ -20,7 +20,7 @@ module.exports = function insertTemplate(templatesPath) {
 
     // load templates dir
     if (!env) {
-      env = new nunjucks.Environment(new nunjucks.FileSystemLoader(templatesPath));
+      env = new nunjucks.Environment(new nunjucks.FileSystemLoader(templatesPath, { watch: true }));
     }
 
     // render file contents within template
