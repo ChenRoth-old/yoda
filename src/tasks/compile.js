@@ -22,7 +22,7 @@ module.exports = (gulp, metadata, opts) => {
       .pipe(frontmatter())
       .pipe(injectMetadata(metadata))
       .pipe(skipDraft())
-      .pipe(interpolate())
+      // .pipe(interpolate())
       .pipe(md2html())
       .pipe(renderTemplate(opts.paths.templates))
       .pipe(gulp.dest(opts.paths.build));

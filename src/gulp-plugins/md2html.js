@@ -17,6 +17,6 @@ module.exports = function md2html() {
             </div>`;
   }
   return markdown({
-    renderer: renderer
+    renderer,
   });
 }

@@ -6,23 +6,32 @@ const path = require('path');
 
 let env;
 
+// TODO: unescaping nunjucks tags and passing the body as a nunjucks template
+// to be {% include %}'d within the layout template
+// is somehow causing re-compiling all files on a single file change
+// this performance hit must be fixed 
+
 module.exports = function insertTemplate(templatesPath) {
   return through.obj(function(file, encoding, cb) {
 
     let template = file.data.template || 'default';
 
+    // unescape html within nunjucks tags and compile body to a nunjucks template
+    let body = nunjucks.compile(unescapeNunjucksTags(file.contents.toString()))
+
     // template data would be the file's metadata, with the file contents appended to it as 'body'
     let templateData = Object.assign({}, file.data, {
       url: '/' + file.relative.replace(/\.md$/, '.html'),
       hierarchy: file.relative.split(path.sep).slice(0, -1),
-      body: file.contents.toString().trim()
+      body
     });
 
     // load templates dir
     if (!env) {
-      env = new nunjucks.Environment(new nunjucks.FileSystemLoader(templatesPath, { watch: true }));
+      env = new nunjucks.Environment(new nunjucks.FileSystemLoader(templatesPath, {
+        watch: true
+      }));
     }
-
     // render file contents within template
     let output = env.render(`${template}.html`, templateData);
 
@@ -30,4 +39,23 @@ module.exports = function insertTemplate(templatesPath) {
     file.contents = str2stream(output);
     return cb(null, file);
   });
+}
+
+
+function unescapeHtml(s) {
+  return s
+    .replace(/&#39;/g, '\'')
+    .replace(/&quot;/g, '"')
+    .replace(/&amp;/g, '&')
+    .replace(/&gt;/g, '>')
+    .replace(/&lt;/g, '<');
+}
+
+function unescapeNunjucksTags(content) {
+  let nunjucksTagsPattern = /({[{%]-?.+-?[%}]})/g
+  let tokens = content.split(nunjucksTagsPattern);
+  for (let i = 1; i < tokens.length; i += 2) {
+    tokens[i] = unescapeHtml(tokens[i]);
+  }
+  return tokens.join('');
 }
