@@ -86,7 +86,7 @@ require('./tasks/scripts')(gulp, opts);
 require('./tasks/toc')(gulp, opts);
 require('./tasks/metadata')(gulp, metadata, opts);
 require('./tasks/clean')(gulp, opts);
-require('./tasks/fetch')(gulp, opts.paths.content, path.join(opts.paths.base, 'sources.json'));
+require('./tasks/fetch')(gulp, opts.paths.base, path.join(opts.paths.base, 'sources.json'));
 require('./tasks/compile')(gulp, metadata, opts);
 require('./tasks/watch')(gulp, opts);
 
