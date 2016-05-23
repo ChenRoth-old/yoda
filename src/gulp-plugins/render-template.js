@@ -3,15 +3,17 @@ const through = require('through2');
 const nunjucks = require('nunjucks');
 const str2stream = require('string-to-stream');
 const path = require('path');
+const gutil = require('gulp-util');
+const util = require('util');
 
 let env;
 
 // TODO: unescaping nunjucks tags and passing the body as a nunjucks template
 // to be {% include %}'d within the layout template
 // is somehow causing re-compiling all files on a single file change
-// this performance hit must be fixed 
+// this performance hit must be fixed
 
-module.exports = function insertTemplate(templatesPath) {
+module.exports = function renderTemplate(templatesPath) {
   return through.obj(function(file, encoding, cb) {
 
     let template = file.data.template || 'default';
@@ -33,11 +35,19 @@ module.exports = function insertTemplate(templatesPath) {
       }));
     }
     // render file contents within template
-    let output = env.render(`${template}.html`, templateData);
+    let output = null;
 
-    // update file with the newly rendered content
-    file.contents = str2stream(output);
-    return cb(null, file);
+    output = env.render(`${template}.html`, templateData, function(err, output) {
+      if (err) {
+        err = new gutil.PluginError('renderTemplate', `${file.relative}\n${err.message}`);
+        return cb(err);
+      }
+      // update file with the newly rendered content
+      file.contents = str2stream(output);
+      return cb(null, file);
+    });
+
+
   });
 }
 
