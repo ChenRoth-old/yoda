@@ -1,7 +1,7 @@
 'use strict';
 const Download = require('download');
 const path = require('path');
-const fs = require('fs.extra');
+const fs = require('fs-extra');
 const promisify = require("promisify-node");
 const _ = require('lodash');
 const verbose = require('./verbose');
@@ -72,6 +72,7 @@ module.exports = (gulp, basePath, sourcesPath) => {
 
           if (files.length == 1) {
             verbose(`downloaded ${url} => ${files[0].path}`, 'Fetch');
+            resolve(files);
           } else {
             verbose(`extracted ${url} => ${files[0].dirname}:`, 'Fetch');
             files.forEach(function(file) {
@@ -80,21 +81,27 @@ module.exports = (gulp, basePath, sourcesPath) => {
             // if a remote path has been specified, move only remote path
             // from tmp dir to dest dir
             if (remotePath) {
-              fs.move(path.join(tmpdir, remotePath), destPath, function(err) {
-                // remove temp contents anyway
-                fs.rmrf(tmpdir);
+              fs.move(
+                path.join(tmpdir, remotePath),
+                destPath, {
+                  clobber: true
+                },
+                function(err) {
+                  // remove temp contents anyway
+                  fs.removeSync(tmpdir);
 
-                if (err) {
-                  reject(err);
-                  return;
-                }
+                  if (err) {
+                    reject(err);
+                    return;
+                  }
 
-              });
+                  resolve(files);
+
+                });
+            } else {
+              resolve(files);
             }
           }
-
-          resolve(files);
-
         });
       });
 

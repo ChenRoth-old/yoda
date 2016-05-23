@@ -91,7 +91,7 @@ require('./tasks/compile')(gulp, metadata, opts);
 require('./tasks/watch')(gulp, opts);
 
 // register 'build' task
-let build = gulp.series('clean', gulp.parallel('metadata', 'fetch'), gulp.parallel('compile', 'assets', 'style', 'scripts'));
+let build = gulp.series('clean', gulp.series('fetch', 'metadata'), gulp.parallel('compile', 'assets', 'style', 'scripts'));
 build.displayName = 'build';
 build.description = 'clean, fetch remote metadata and content, compile content and process style';
 gulp.task(build);
