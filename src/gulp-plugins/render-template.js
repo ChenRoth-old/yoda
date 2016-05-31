@@ -62,7 +62,7 @@ function unescapeHtml(s) {
 }
 
 function unescapeNunjucksTags(content) {
-  let nunjucksTagsPattern = /({[{%]-?.+-?[%}]})/g
+  let nunjucksTagsPattern = /({[{%]-? *.+ *-?[%}]})/g
   let tokens = content.split(nunjucksTagsPattern);
   for (let i = 1; i < tokens.length; i += 2) {
     tokens[i] = unescapeHtml(tokens[i]);

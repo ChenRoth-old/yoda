@@ -16,7 +16,23 @@ module.exports = function md2html() {
               </table>\
             </div>`;
   }
+
+  // modify the rule for inline link parsing to support nunjucks within
+  // link url
+  let pattern = /^!?\[((?:\[[^\]]*\]|[^\[\]]|\](?=[^\[]*\]))*)\]\( *((?:{{[^}]*}})|(?:[^{}]*)) *\)/ig
+  markdown.marked.prototype.constructor.Parser.prototype.parse = function(src) {
+    this.inline = new markdown.marked.InlineLexer(src.links, this.options);
+    this.inline.rules.link = pattern;
+    this.tokens = src.reverse();
+    var out = '';
+    while (this.next()) {
+      out += this.tok();
+    }
+    return out;
+  };
+
+
   return markdown({
-    renderer,
+    renderer
   });
 }
