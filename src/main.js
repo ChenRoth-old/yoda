@@ -18,11 +18,13 @@ const argv = require('yargs')
   .alias('v', 'verbose')
   .default({
     verbose: false,
-    silent: true
+    silent: true,
+    port: 3000
   })
   .demand('d')
   .alias('d', 'dir')
   .describe('verbose', 'show verbose output')
+  .describe('port', 'local web server port for site preview')
   .usage('Usage: yoda -d base_dir [-v]')
   .help('h')
   .argv;
@@ -34,6 +36,8 @@ const pretty = (input) => {
 
 let opts = {
   verbose: argv.verbose,
+  localServerPort: argv.port,
+  localServerUrl: `http://localhost:${argv.port}`,
   base: path.resolve(argv.dir)
 };
 
@@ -66,17 +70,18 @@ try {
 
 gulp.task('browser-sync', browserSyncTask);
 
-function browserSyncTask() {
+function browserSyncTask(done) {
   browserSync.init({
     server: {
       baseDir: opts.paths.build,
       //directory: true
     },
+    port: opts.localServerPort,
     ui: false,
     logLevel: opts.verbose ? 'info' : 'silent',
     notify: false
 
-  });
+  }, done);
 }
 browserSyncTask.description = 'live preview of your website in the browser!'
 
@@ -89,6 +94,7 @@ require('./tasks/clean')(gulp, opts);
 require('./tasks/fetch')(gulp, opts.paths.base, path.join(opts.paths.base, 'sources.json'));
 require('./tasks/compile')(gulp, metadata, opts);
 require('./tasks/watch')(gulp, opts);
+require('./tasks/check-links')(gulp, opts);
 
 // register 'build' task
 let build = gulp.series('clean', gulp.series('fetch', 'metadata'), gulp.parallel('compile', 'assets', 'style', 'scripts'));
@@ -100,6 +106,8 @@ gulp.task(build);
 let defaultTask = gulp.series('build', gulp.parallel('browser-sync', 'watch'));
 defaultTask.description = 'build and watch';
 gulp.task('default', defaultTask);
+
+gulp.task('check-live-links', gulp.series('browser-sync', 'check-links'));
 
 function validateDirectoryExists(dir) {
   try {

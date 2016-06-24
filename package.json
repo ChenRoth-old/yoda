@@ -5,6 +5,7 @@
   "main": "yoda",
   "dependencies": {},
   "devDependencies": {
+    "broken-link-checker": "^0.7.1",
     "browser-sync": "^2.11.1",
     "colors": "^1.1.2",
     "del": "^2.2.0",
