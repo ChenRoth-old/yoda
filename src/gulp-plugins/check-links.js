@@ -18,7 +18,7 @@ module.exports = function checkLinks(baseUrl) {
               reason = blc[result.brokenReason] || result.brokenReason,
               line = result.html.location.line,
               col = result.html.location.col;
-            let error = `${file.relative.white} [${line.toString().white}:${col.toString().white}] > ${url.red.bold} is broken (${reason})`;
+            let error = `${file.relative.white} [${line.toString().white}:${col.toString().white}] ${url.red.bold} is broken (${reason})`;
             verbose(error, 'Check link')
             brokenLinks.push(error);
           }
