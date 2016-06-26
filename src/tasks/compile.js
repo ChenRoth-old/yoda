@@ -17,6 +17,7 @@ module.exports = (gulp, metadata, opts) => {
     var compileAll = compileAll || false;
 
     return gulp.src(path.join(opts.paths.content, '**/*.md'), {
+        follow: true,
         since: compileAll ? null : gulp.lastRun('compile')
       })
       .pipe(frontmatter())

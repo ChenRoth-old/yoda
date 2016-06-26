@@ -15,9 +15,10 @@ module.exports = (gulp, opts) => {
       cwd: opts.paths.assets
     },
     gulp.task('assets'));
-    
+
     // watch for content changes
     let contentWatcher = gulp.watch('**/*.md', {
+        follow: true,
         cwd: opts.paths.content
       },
       gulp.task('compile'));

@@ -9,6 +9,7 @@ module.exports = (gulp, opts) => {
 
   function toc() {
     return gulp.src('**/*.md', {
+        follow: true,
         cwd: opts.paths.content
       })
       .pipe(frontmatter())

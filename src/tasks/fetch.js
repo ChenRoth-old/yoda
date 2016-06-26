@@ -7,6 +7,7 @@ const _ = require('lodash');
 const verbose = require('./verbose');
 const os = require('os');
 const uuid = require('uuid');
+const untildify = require('untildify');
 
 module.exports = (gulp, basePath, sourcesPath) => {
   gulp.task(fetch);
@@ -31,7 +32,6 @@ module.exports = (gulp, basePath, sourcesPath) => {
     let promisedDownloads = [];
     Object.keys(sources).forEach((targetPath) => {
 
-      downloadClient = new Download(downloadOpts);
       let source = sources[targetPath];
       let url = null;
       let remotePath = null;
@@ -44,69 +44,78 @@ module.exports = (gulp, basePath, sourcesPath) => {
       }
 
       let destPath = path.join(basePath, targetPath);
-      let tmpdir = remotePath ? createRandomTmpDir() : null;
       if (fs.existsSync(destPath)) {
         verbose(`${destPath} already exists, skipping`, 'Fetch');
         return;
       }
+      // remote http(s) source
+      if (url.startsWith('http')) {
 
-      let pathIncludesFilenameMatch = destPath.match(/[^/]+\.\w+$/);
-      let isSourceArchive = url.match(/\.(zip|tar.gz|tar)$/)
-      if (pathIncludesFilenameMatch && !isSourceArchive) {
-        let fileName = pathIncludesFilenameMatch[0];
-        destPath = path.dirname(destPath);
-        downloadClient.get(url, destPath).rename(fileName);
-      } else {
-        // download to temp dir or dest dir, depending on whether
-        // remote path has been specified
-        downloadClient.get(url, tmpdir || destPath);
-      }
+        let tmpdir = remotePath ? createRandomTmpDir() : null;
+        downloadClient = new Download(downloadOpts);
+        let pathIncludesFilenameMatch = destPath.match(/[^/]+\.\w+$/);
+        let isSourceArchive = url.match(/\.(zip|tar.gz|tar)$/)
+        if (pathIncludesFilenameMatch && !isSourceArchive) {
+          let fileName = pathIncludesFilenameMatch[0];
+          destPath = path.dirname(destPath);
+          downloadClient.get(url, destPath).rename(fileName);
+        } else {
+          // download to temp dir or dest dir, depending on whether
+          // remote path has been specified
+          downloadClient.get(url, tmpdir || destPath);
+        }
 
-      let promisedDownload = new Promise(function(resolve, reject) {
-        downloadClient.run((err, files) => {
-          if (err) {
-            err = new Error(`couldn't fetch source ${remotePath}\n${err}`)
-            reject(err);
-            return;
-          }
-
-          if (files.length == 1) {
-            verbose(`downloaded ${url} => ${files[0].path}`, 'Fetch');
-            resolve(files);
-          } else {
-            verbose(`extracted ${url} => ${files[0].dirname}:`, 'Fetch');
-            files.forEach(function(file) {
-              verbose(`${file.relative}`, 'Fetch');
-            });
-            // if a remote path has been specified, move only remote path
-            // from tmp dir to dest dir
-            if (remotePath) {
-              fs.move(
-                path.join(tmpdir, remotePath),
-                destPath, {
-                  clobber: true
-                },
-                function(err) {
-                  // remove temp contents anyway
-                  fs.removeSync(tmpdir);
-
-                  if (err) {
-                    reject(err);
-                    return;
-                  }
-
-                  resolve(files);
-
-                });
-            } else {
-              resolve(files);
+        let promisedDownload = new Promise(function(resolve, reject) {
+          downloadClient.run((err, files) => {
+            if (err) {
+              err = new Error(`couldn't fetch source ${remotePath}\n${err}`)
+              reject(err);
+              return;
             }
-          }
+
+            if (files.length == 1) {
+              verbose(`downloaded ${url} => ${files[0].path}`, 'Fetch');
+              resolve(files);
+            } else {
+              verbose(`extracted ${url} => ${files[0].dirname}:`, 'Fetch');
+              files.forEach(function(file) {
+                verbose(`${file.relative}`, 'Fetch');
+              });
+              // if a remote path has been specified, move only remote path
+              // from tmp dir to dest dir
+              if (remotePath) {
+                fs.move(
+                  path.join(tmpdir, remotePath),
+                  destPath, {
+                    clobber: true
+                  },
+                  function(err) {
+                    // remove temp contents anyway
+                    fs.removeSync(tmpdir);
+
+                    if (err) {
+                      reject(err);
+                      return;
+                    }
+
+                    resolve(files);
+
+                  });
+              } else {
+                resolve(files);
+              }
+            }
+          });
         });
-      });
 
-      promisedDownloads.push(promisedDownload);
-
+        promisedDownloads.push(promisedDownload);
+      }
+      // local filesystem source
+      else {
+        let localPath = untildify(url);
+        let isSymbolic = source.symbolic || false;
+        isSymbolic ? fs.symlinkSync(localPath, destPath) : fs.copySync(localPath, destPath);
+      }
     });
 
     Promise.all(promisedDownloads).then(function() {
