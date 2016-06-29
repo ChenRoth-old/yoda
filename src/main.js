@@ -19,10 +19,12 @@ const argv = require('yargs')
   .default({
     verbose: false,
     silent: true,
-    port: 3000
+    port: 3000,
+    sources: 'sources.json'
   })
   .demand('d')
   .alias('d', 'dir')
+  .describe('sources', 'specify a json file path to fetch sources')
   .describe('verbose', 'show verbose output')
   .describe('port', 'local web server port for site preview')
   .usage('Usage: yoda -d base_dir [-v]')
@@ -38,8 +40,10 @@ let opts = {
   verbose: argv.verbose,
   localServerPort: argv.port,
   localServerUrl: `http://localhost:${argv.port}`,
-  base: path.resolve(argv.dir)
+  base: path.resolve(argv.dir),
 };
+
+opts.sourcesFile = path.resolve(opts.base, argv.sources);
 
 let paths = {
   base: opts.base,
@@ -91,7 +95,7 @@ require('./tasks/scripts')(gulp, opts);
 require('./tasks/toc')(gulp, opts);
 require('./tasks/metadata')(gulp, metadata, opts);
 require('./tasks/clean')(gulp, opts);
-require('./tasks/fetch')(gulp, opts.paths.base, path.join(opts.paths.base, 'sources.json'));
+require('./tasks/fetch')(gulp, opts.paths.base, opts.sourcesFile);
 require('./tasks/compile')(gulp, metadata, opts);
 require('./tasks/watch')(gulp, opts);
 require('./tasks/check-links')(gulp, opts);

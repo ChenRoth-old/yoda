@@ -17,7 +17,7 @@ module.exports = (gulp, basePath, sourcesPath) => {
     try {
       sources = require(sourcesPath);
     } catch (e) {
-      verbose('no sources to fetch', 'Fetch');
+      verbose(`no sources to fetch at ${sourcesPath}`, 'Fetch');
       done();
       return;
     }
@@ -124,7 +124,7 @@ module.exports = (gulp, basePath, sourcesPath) => {
 
   }
 
-  fetch.description = 'fetch remote content referenced in sources.json'
+  fetch.description = 'fetch remote content referenced in a json file'
 }
 
 function createRandomTmpDir() {
