@@ -114,6 +114,7 @@ module.exports = (gulp, basePath, sourcesPath) => {
       else {
         let localPath = untildify(url);
         let isSymbolic = source.symbolic || false;
+        fs.mkdirpSync(path.dirname(destPath));
         isSymbolic ? fs.symlinkSync(localPath, destPath) : fs.copySync(localPath, destPath);
       }
     });
