@@ -2,7 +2,7 @@
 const frontmatter = require('gulp-front-matter');
 const path = require('path');
 const processTree = require('../gulp-plugins/process-toc');
-const fs = require('fs');
+const fs = require('fs-extra');
 
 module.exports = (gulp, opts) => {
   gulp.task('toc', toc);

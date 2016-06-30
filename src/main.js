@@ -5,7 +5,7 @@ const gulp = require('gulp');
 const prettyjson = require('prettyjson');
 const browserSync = require('browser-sync').create('browser');
 const path = require('path');
-const fs = require('fs');
+const fs = require('fs-extra');
 
 const verbose = require('./tasks/verbose');
 
@@ -15,8 +15,10 @@ try {
 } catch (e) {}
 
 const argv = require('yargs')
+  .boolean('clean')
   .alias('v', 'verbose')
   .default({
+    clean: true,
     verbose: false,
     silent: true,
     port: 3000,
@@ -24,6 +26,7 @@ const argv = require('yargs')
   })
   .demand('d')
   .alias('d', 'dir')
+  .describe('clean', 'clean output path before build?')
   .describe('sources', 'specify a json file path to fetch sources')
   .describe('verbose', 'show verbose output')
   .describe('port', 'local web server port for site preview')
@@ -41,6 +44,7 @@ let opts = {
   localServerPort: argv.port,
   localServerUrl: `http://localhost:${argv.port}`,
   base: path.resolve(argv.dir),
+  clean: argv.clean
 };
 
 opts.sourcesFile = path.resolve(opts.base, argv.sources);
@@ -100,10 +104,12 @@ require('./tasks/compile')(gulp, metadata, opts);
 require('./tasks/watch')(gulp, opts);
 require('./tasks/check-links')(gulp, opts);
 
+gulp.task('noop', function(done) { done(); })
+
 // register 'build' task
-let build = gulp.series('clean', gulp.series('fetch', 'metadata'), gulp.parallel('compile', 'assets', 'style', 'scripts'));
+let build = gulp.series(opts.clean ? 'clean' : 'noop', gulp.series('fetch', 'metadata'), gulp.parallel('compile', 'assets', 'style', 'scripts'));
 build.displayName = 'build';
-build.description = 'clean, fetch remote metadata and content, compile content and process style';
+build.description = '[clean], fetch remote metadata and content, compile content and process style';
 gulp.task(build);
 
 // register 'default' task
