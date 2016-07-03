@@ -26,7 +26,7 @@ module.exports = function processToc() {
       let url = '/' + file.relative.replace(/\.md$/, '.html');;
       let hierarchy = file.relative.split(path.sep).slice(0, -1);
       let name = file.stem;
-      let title = file.frontMatter.title || file.stem;
+      let title = file.frontMatter.title || (isFolderMetadata ? null : file.stem);
       let keywords = file.frontMatter.keywords || [];
       let weight = file.frontMatter.weight || 0;
       let attributes = {
@@ -85,7 +85,7 @@ function appendToTree(root, hierarchy, attributes, isFolderMetadata) {
   if (isFolderMetadata) {
     // use folder metadata file to override folder metadata
     Object.assign(pointer, {
-      title: attributes.title,
+      title: attributes.title || pointer.title,
       weight: attributes.weight
     });
   } else {
