@@ -13,6 +13,7 @@ module.exports = function processToc() {
     function transform(file, encoding, cb) {
       let isDraft = !!file.frontMatter.draft;
       let isFolderMetadata = (file.stem == '_folder');
+      let isIndexFile = (file.stem == 'index');
       if (isDraft) {
         verbose(`excluded draft: ${file.relative}`, 'TOC');
         return cb();
@@ -36,7 +37,7 @@ module.exports = function processToc() {
         keywords,
         weight
       }
-      tree = appendToTree(tree, hierarchy, attributes, isFolderMetadata);
+      tree = appendToTree(tree, hierarchy, attributes, isFolderMetadata, isIndexFile);
       return cb();
     },
     function flush(cb) {
@@ -57,7 +58,7 @@ function sortTreeRecursive(node) {
   node.children.sort(sortBranch);
 }
 
-function appendToTree(root, hierarchy, attributes, isFolderMetadata) {
+function appendToTree(root, hierarchy, attributes, isFolderMetadata, isIndexFile) {
   let tree = Object.assign({
     'title': 'root',
     'children': [],
@@ -82,6 +83,13 @@ function appendToTree(root, hierarchy, attributes, isFolderMetadata) {
     }
     depth++;
   }
+
+  if (isIndexFile) {
+    Object.assign(pointer, {
+      url: path.dirname(attributes.url),
+    });
+  };
+
   if (isFolderMetadata) {
     // use folder metadata file to override folder metadata
     Object.assign(pointer, {
@@ -90,7 +98,8 @@ function appendToTree(root, hierarchy, attributes, isFolderMetadata) {
     });
   } else {
     pointer.children.push(attributes);
-  }
+  };
+
   return tree;
 }
 
