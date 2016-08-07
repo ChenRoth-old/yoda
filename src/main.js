@@ -103,6 +103,7 @@ require('./tasks/fetch')(gulp, opts.paths.base, opts.sourcesFile);
 require('./tasks/compile')(gulp, metadata, opts);
 require('./tasks/watch')(gulp, opts);
 require('./tasks/check-links')(gulp, opts);
+require('./tasks/publish-s3')(gulp, opts);
 
 gulp.task('noop', function(done) { done(); })
 
