@@ -31,7 +31,7 @@ module.exports = function renderTemplate(templatesPath) {
     // load templates dir
     if (!env) {
       env = new nunjucks.Environment(new nunjucks.FileSystemLoader(templatesPath, {
-        watch: true
+        watch: false // setting this to true causes the build task to hang
       }));
     }
     // render file contents within template
@@ -46,7 +46,6 @@ module.exports = function renderTemplate(templatesPath) {
       file.contents = str2stream(output);
       return cb(null, file);
     });
-
 
   });
 }
