@@ -86,7 +86,7 @@ function appendToTree(root, hierarchy, attributes, isFolderMetadata, isIndexFile
 
   if (isIndexFile) {
     Object.assign(pointer, {
-      url: path.dirname(attributes.url),
+      url: path.dirname(attributes.url) + '/',
     });
   };
 

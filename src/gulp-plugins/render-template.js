@@ -23,7 +23,7 @@ module.exports = function renderTemplate(templatesPath) {
 
     // template data would be the file's metadata, with the file contents appended to it as 'body'
     let templateData = Object.assign({}, file.data, {
-      url: '/' + file.relative.replace(/\.md$/, '.html'),
+      url: '/' + file.relative.replace(/\.md$/, '.html').replace(/index\.html$/, ''),
       hierarchy: file.relative.split(path.sep).slice(0, -1),
       body
     });
