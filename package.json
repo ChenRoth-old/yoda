@@ -2,11 +2,9 @@
   "name": "yoda",
   "version": "1.0.0",
   "description": "Yoda - he knows his shit",
-  "main": "yoda",
+  "bin": "bin/yoda",
   "dependencies": {
-    "untildify": "^3.0.2"
-  },
-  "devDependencies": {
+    "untildify": "^3.0.2",
     "broken-link-checker": "^0.7.1",
     "browser-sync": "^2.11.1",
     "colors": "^1.1.2",
