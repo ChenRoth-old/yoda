@@ -16,7 +16,7 @@ let env;
 module.exports = function renderTemplate(templatesPath) {
   return through.obj(function(file, encoding, cb) {
 
-    let template = file.data.template || 'default';
+    let template = (file.data && (file.data.template || 'default')) || null;
 
     // unescape html within nunjucks tags and compile body to a nunjucks template
     let body = nunjucks.compile(unescapeNunjucksTags(file.contents.toString()))
@@ -34,10 +34,8 @@ module.exports = function renderTemplate(templatesPath) {
         watch: false // setting this to true causes the build task to hang
       }));
     }
-    // render file contents within template
-    let output = null;
 
-    output = env.render(`${template}.html`, templateData, function(err, output) {
+    let onRender = function(err, output) {
       if (err) {
         err = new gutil.PluginError('renderTemplate', `${file.relative}\n${err.message}`);
         return cb(err);
@@ -45,8 +43,15 @@ module.exports = function renderTemplate(templatesPath) {
       // update file with the newly rendered content
       file.contents = str2stream(output);
       return cb(null, file);
-    });
+    };
 
+    if (template) {
+      env.render(`${template}.html`, templateData, onRender);
+    }
+    else {
+      env.renderString(file.contents.toString(), templateData, onRender);
+    }
+    
   });
 }
 
