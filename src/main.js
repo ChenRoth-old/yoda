@@ -104,11 +104,12 @@ require('./tasks/compile')(gulp, metadata, opts);
 require('./tasks/watch')(gulp, opts);
 require('./tasks/check-links')(gulp, opts);
 require('./tasks/publish-s3')(gulp, opts);
+require('./tasks/copy-html')(gulp, opts);
 
 gulp.task('noop', function(done) { done(); })
 
 // register 'build' task
-let build = gulp.series(opts.clean ? 'clean' : 'noop', gulp.series('fetch', 'metadata'), gulp.parallel('compile', 'assets', 'style', 'scripts'));
+let build = gulp.series(opts.clean ? 'clean' : 'noop', gulp.series('fetch', 'metadata'), gulp.parallel('copyHtml', 'compile', 'assets', 'style', 'scripts'));
 build.displayName = 'build';
 build.description = '[clean], fetch remote metadata and content, compile content and process style';
 gulp.task(build);

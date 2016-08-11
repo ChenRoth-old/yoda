@@ -51,7 +51,7 @@ module.exports = function renderTemplate(templatesPath) {
     else {
       env.renderString(file.contents.toString(), templateData, onRender);
     }
-    
+
   });
 }
 
