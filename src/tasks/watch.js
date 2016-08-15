@@ -12,18 +12,24 @@ module.exports = (gulp, opts) => {
   function watch() {
 
     let assetsWatcher = gulp.watch('**/*.*', {
-      cwd: opts.paths.assets
-    },
-    gulp.task('assets'));
+        cwd: opts.paths.assets
+      },
+      gulp.task('assets'));
 
     // watch for content changes
-    let contentWatcher = gulp.watch('**/*.md', {
-        follow: true,
-        cwd: opts.paths.content
-      },
+    let contentWatcher = gulp.watch(opts.paths.content,
       gulp.task('compile'));
-
+    contentWatcher.on('all', gulp.task('compile'))
     contentWatcher.on('unlink', delBuildFile);
+
+    // watch for content changes
+    let htmlWatcher = gulp.watch(opts.paths.content,
+      gulp.task('copyHtml'));
+
+    htmlWatcher.on('all', gulp.task('copyHtml'))
+    htmlWatcher.on('unlink', delBuildFile);
+
+
 
     // watch for style changes
     let styleWatcher = gulp.watch('**/*.scss', {
