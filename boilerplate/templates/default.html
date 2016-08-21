@@ -1,0 +1,29 @@
+<!-- Yoda uses nunjucks (https://mozilla.github.io/nunjucks/) for templating -->
+
+<!--
+this file, default.html, is the default template for rendering pages
+if you'd like to use other templates, create a new template file and add a `template` attribute to a page frontmatter
+with the template file name, e.g. `template: my_template`
+-->
+
+<head>
+<!-- 'title' is a built-in metadata attribute, either taken from the page frontmatter or derived implicitly from the file name  -->
+<title>{{ title | capitalize }}</title>
+<link rel="stylesheet" href="/_css/style.css" />
+<style>
+  body {
+    /* here, we use the global `defaultColor` attribute defined in metadata.json */
+    color: {{ defaultColor }};
+  }
+</style>
+</head>
+<body>
+  <header>
+     <!-- here, we use the global `siteName` attribute defined in metadata.json */ -->
+    <h1 style="color: #d0c589">{{ siteName }}</h1>
+  </header>
+<!-- use this line to inject the page body -->
+{% include body %}
+
+<script src="/_scripts/example.js"></script>
+</body>

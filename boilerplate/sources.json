@@ -1,0 +1,7 @@
+{
+  "content/remote/single-file.md": "https://raw.githubusercontent.com/cloudify-cosmo/cloudify-manager/master/README.md",
+  "content/remote/file-from-zip.md": {
+    "url": "https://github.com/ChenRoth/yoda/archive/master.zip",
+    "path": "README.md"
+  }
+}

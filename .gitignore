@@ -2,4 +2,6 @@ node_modules
 yodaconfig.json
 demo/*
 !demo/templates
-
+boilerplate/tree.json
+boilerplate/build
+boilerplate/content/remote
