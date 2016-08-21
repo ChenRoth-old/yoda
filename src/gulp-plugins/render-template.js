@@ -13,7 +13,7 @@ let env;
 // is somehow causing re-compiling all files on a single file change
 // this performance hit must be fixed
 
-module.exports = function renderTemplate(templatesPath) {
+module.exports = function renderTemplate(opts) {
   return through.obj(function(file, encoding, cb) {
 
     let template = (file.data && (file.data.template || 'default')) || null;
@@ -22,15 +22,18 @@ module.exports = function renderTemplate(templatesPath) {
     let body = nunjucks.compile(unescapeNunjucksTags(file.contents.toString()))
 
     // template data would be the file's metadata, with the file contents appended to it as 'body'
+    let isIndexFile = (file.stem == 'index');
+    let url = '/' + (isIndexFile ? path.dirname(file.relative) + '/' : file.relative.replace(/\.html$/, opts.prettyUrl ? '/' : '.html'));
+
     let templateData = Object.assign({}, file.data, {
-      url: '/' + file.relative.replace(/\.md$/, '.html').replace(/index\.html$/, ''),
+      url: url,
       hierarchy: file.relative.split(path.sep).slice(0, -1),
       body
     });
 
     // load templates dir
     if (!env) {
-      env = new nunjucks.Environment(new nunjucks.FileSystemLoader(templatesPath, {
+      env = new nunjucks.Environment(new nunjucks.FileSystemLoader(opts.paths.templates, {
         watch: false // setting this to true causes the build task to hang
       }));
     }

@@ -16,8 +16,10 @@ try {
 
 const argv = require('yargs')
   .boolean('clean')
+  .boolean('pretty')
   .alias('v', 'verbose')
   .default({
+    pretty: true,
     clean: true,
     verbose: false,
     silent: true,
@@ -30,6 +32,7 @@ const argv = require('yargs')
   .describe('sources', 'specify a json file path to fetch sources')
   .describe('verbose', 'show verbose output')
   .describe('port', 'local web server port for site preview')
+  .describe('pretty', 'build pretty urls (using index.html files)')
   .usage('Usage: yoda -d base_dir [-v]')
   .help('h')
   .argv;
@@ -40,6 +43,7 @@ const pretty = (input) => {
 }
 
 let opts = {
+  prettyUrl: argv.pretty,
   verbose: argv.verbose,
   localServerPort: argv.port,
   localServerUrl: `http://localhost:${argv.port}`,

@@ -5,7 +5,11 @@ const path = require('path');
 const _ = require('lodash');
 const verbose = require('../tasks/verbose');
 
-module.exports = function processToc() {
+module.exports = function processToc(opts) {
+
+  opts = _.defaults(opts, {
+      prettyUrl: false
+  });
 
   let tree = null;
 
@@ -24,7 +28,7 @@ module.exports = function processToc() {
         return cb();
       }
 
-      let url = '/' + file.relative.replace(/\.md$/, '.html');;
+      let url = '/' + (isIndexFile ? path.dirname(file.relative) + '/' : file.relative.replace(/\.md$/, opts.prettyUrl ? '/' : '.html'));
       let hierarchy = file.relative.split(path.sep).slice(0, -1);
       let name = file.stem;
       let title = file.frontMatter.title || (isFolderMetadata ? null : file.stem);
@@ -86,7 +90,7 @@ function appendToTree(root, hierarchy, attributes, isFolderMetadata, isIndexFile
 
   if (isIndexFile) {
     Object.assign(pointer, {
-      url: path.dirname(attributes.url) + '/',
+      url: attributes.url
     });
   };
 

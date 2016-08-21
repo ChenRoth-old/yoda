@@ -13,7 +13,7 @@ module.exports = (gulp, opts) => {
         cwd: opts.paths.content
       })
       .pipe(frontmatter())
-      .pipe(processTree())
+      .pipe(processTree(opts))
       .pipe(fs.createWriteStream(path.join(opts.paths.base, 'tree.json')));
   }
 

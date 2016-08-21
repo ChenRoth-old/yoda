@@ -4,6 +4,8 @@ const injectMetadata = require('../gulp-plugins/inject-metadata');
 const interpolate = require('../gulp-plugins/interpolate');
 const md2html = require('../gulp-plugins/md2html');
 const skipDraft = require('../gulp-plugins/skip-draft');
+const prettyUrl = require('../gulp-plugins/pretty-url');
+const gutil = require('gulp-util');
 
 const renderTemplate = require('../gulp-plugins/render-template');
 const path = require('path');
@@ -24,7 +26,8 @@ module.exports = (gulp, metadata, opts) => {
       .pipe(injectMetadata(metadata))
       .pipe(skipDraft())
       .pipe(md2html())
-      .pipe(renderTemplate(opts.paths.templates))
+      .pipe(renderTemplate(opts))
+      .pipe(opts.prettyUrl ? prettyUrl() : gutil.noop())
       .pipe(gulp.dest(opts.paths.build));
 
   }
